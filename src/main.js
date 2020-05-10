@@ -103,7 +103,6 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
     const aFace = openCascade.TopoDS.prototype.Face(aFaceExplorer.Current());
     // Check if <aFace> is the top face of the bottle's neck 
     const aSurface = openCascade.BRep_Tool.prototype.Surface(aFace);
-    console.log(aSurface.get().DynamicType().get().Name());
     if(aSurface.get().DynamicType().get().Name() === "Geom_Plane") {
       const aPlane = new openCascade.Handle_Geom_Plane(aSurface.get()).get();
       const aPnt = aPlane.Location();
