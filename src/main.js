@@ -1,11 +1,9 @@
 import {
   AmbientLight,
-  BoxGeometry,
   Color,
   DirectionalLight,
   Geometry,
   Mesh,
-  MeshBasicMaterial,
   MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
