@@ -2734,10 +2734,10 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-opencascade.js@*:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-0.1.4.tgz#ca4167d91ae8468c291b77c8984938ea597fb7a3"
-  integrity sha512-ZAZMoOeVFVndu9da/SRIpg0LZZjzo7D5OzOeWNTRoWqgQTaOQd7OD4Fjp1jkp+3OO5J5VgEnsP+tZ1mPEJDUTQ==
+opencascade.js@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-0.1.7.tgz#fbc4c319cb3ac4723c3800cce3f91d66e4a8b20c"
+  integrity sha512-JEj60B57xa+DElboMupj6Hht/TZs65I8aciX38OToLtqO4+rh627MPpXkO/vFaQ6IZnkbfRd7cbMGpN8jGT/og==
 
 opn@^5.5.0:
   version "5.5.0"
