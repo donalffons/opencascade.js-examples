@@ -12,5 +12,17 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     })
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /opencascade\.wasm\.wasm$/,
+        type: "javascript/auto",
+        loader: "file-loader"
+      }
+    ]
+  },
+  node: {
+    fs: "empty"
+  }
 };
