@@ -21,8 +21,10 @@ var scene = new Scene();
 var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 var renderer = new WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const viewport = document.getElementById("viewport");
+const viewportRect = viewport.getBoundingClientRect();
+renderer.setSize(viewportRect.width, viewportRect.height);
+viewport.appendChild(renderer.domElement);
 
 const light = new AmbientLight(0x404040);
 scene.add(light);
@@ -160,8 +162,8 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   return aRes;
 }
 
-initOpenCascade().then(async openCascade => {
-  const bottle = MakeBottle(openCascade, 50, 70, 30);
+const addBottle = async (openCascade, width, height, thickness) => {
+  const bottle = MakeBottle(openCascade, width, height, thickness);
 
   openCascadeHelper.setOpenCascade(openCascade);
   const facelist = await openCascadeHelper.tessellate(bottle);
@@ -176,6 +178,28 @@ initOpenCascade().then(async openCascade => {
   geometry.vertices = vertices;
   geometry.faces = faces;
   const object = new Mesh(geometry, objectMat);
+  object.name = "bottle";
   object.rotation.x = -Math.PI / 2;
   scene.add(object);
+}
+
+initOpenCascade().then(async openCascade => {
+  let width = 50, height = 70, thickness = 30;
+  await addBottle(openCascade, width, height, thickness);
+  
+  window.changeSliderWidth = value => {
+    width = value;
+    scene.remove(scene.getObjectByName("bottle"));
+    addBottle(openCascade, width, height, thickness);
+  }
+  window.changeSliderHeight = value => {
+    height = value;
+    scene.remove(scene.getObjectByName("bottle"));
+    addBottle(openCascade, width, height, thickness);
+  }
+  window.changeSliderThickness = value => {
+    thickness = value;
+    scene.remove(scene.getObjectByName("bottle"));
+    addBottle(openCascade, width, height, thickness);
+  }
 });
