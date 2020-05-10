@@ -19,3 +19,5 @@ This is a repository with examples for [OpenCascade.js](https://github.com/donal
     ```
 
     A new browser window will open which runs the bottle example.
+
+    ![](screenshot.png)
