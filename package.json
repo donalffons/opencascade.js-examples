@@ -17,7 +17,7 @@
     "build": "webpack --mode=production"
   },
   "dependencies": {
-    "opencascade.js": "^0.1.7",
+    "opencascade.js": "^0.1.9",
     "three": "^0.116.1"
   }
 }
