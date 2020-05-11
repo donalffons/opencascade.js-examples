@@ -18,7 +18,7 @@ import openCascadeHelper from './openCascadeHelper';
 var scene = new Scene();
 var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-var renderer = new WebGLRenderer();
+var renderer = new WebGLRenderer({antialias: true});
 const viewport = document.getElementById("viewport");
 const viewportRect = viewport.getBoundingClientRect();
 renderer.setSize(viewportRect.width, viewportRect.height);
