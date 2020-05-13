@@ -51,18 +51,18 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   const aPnt4 = new openCascade.gp_Pnt(myWidth / 2., -myThickness / 4., 0);
   const aPnt5 = new openCascade.gp_Pnt(myWidth / 2., 0, 0);
 
-  // // Profile : Define the Geometry
+  // Profile : Define the Geometry
   const anArcOfCircle = new openCascade.GC_MakeArcOfCircle(aPnt2, aPnt3, aPnt4);
   const aSegment1 = new openCascade.GC_MakeSegment(aPnt1, aPnt2);
   const aSegment2 = new openCascade.GC_MakeSegment(aPnt4, aPnt5);
 
-  // // Profile : Define the Topology
+  // Profile : Define the Topology
   const anEdge1 = new openCascade.BRepBuilderAPI_MakeEdge(aSegment1.Value());
   const anEdge2 = new openCascade.BRepBuilderAPI_MakeEdge(anArcOfCircle.Value());
   const anEdge3 = new openCascade.BRepBuilderAPI_MakeEdge(aSegment2.Value());
   const aWire  = new openCascade.BRepBuilderAPI_MakeWire(anEdge1.Edge(), anEdge2.Edge(), anEdge3.Edge());
 
-  // // Complete Profile
+  // Complete Profile
   const xAxis = openCascade.gp.prototype.OX();
   const aTrsf = new openCascade.gp_Trsf();
 
