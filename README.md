@@ -2,7 +2,11 @@
 
 This is a repository with examples for [OpenCascade.js](https://github.com/donalffons/opencascade.js). Well... Currently, it just contains one example: The [Bottle Tutorial](https://www.opencascade.com/doc/occt-7.4.0/overview/html/occt__tutorial.html) from the official OpenCascade Documentation.
 
-# How to run this example
+# Live Preview
+
+A live preview of this project lives [here](https://donalffons.github.io/opencascade.js-examples/).
+
+# How to run this example locally
 
 1. Install the dependencies
 
