@@ -181,11 +181,9 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   return aRes;
 }
 
-const addBottle = async (openCascade, width, height, thickness) => {
-  const bottle = MakeBottle(openCascade, width, height, thickness);
-
+const addShape = async (openCascade, shape) => {
   openCascadeHelper.setOpenCascade(openCascade);
-  const facelist = await openCascadeHelper.tessellate(bottle);
+  const facelist = await openCascadeHelper.tessellate(shape);
   const [locVertexcoord, locNormalcoord, locTriIndices] = await openCascadeHelper.joinPrimitives(facelist);
   const tot_triangle_count = facelist.reduce((a,b) => a + b.number_of_triangles, 0);
   const [vertices, faces] = await openCascadeHelper.generateGeometry(tot_triangle_count, locVertexcoord, locNormalcoord, locTriIndices);
@@ -197,28 +195,84 @@ const addBottle = async (openCascade, width, height, thickness) => {
   geometry.vertices = vertices;
   geometry.faces = faces;
   const object = new Mesh(geometry, objectMat);
-  object.name = "bottle";
+  object.name = "shape";
   object.rotation.x = -Math.PI / 2;
   scene.add(object);
 }
 
+const loadFileAsync = async (file) => {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsText(file);
+  })
+}
+
+const loadSTEPorIGES = async (openCascade, inputFile) => {
+  await loadFileAsync(inputFile).then(async (fileText) => {
+    const fileName = inputFile.name;
+    // Writes the uploaded file to Emscripten's Virtual Filesystem
+    openCascade.FS.createDataFile("/", fileName, fileText, true, true);
+
+    // Choose the correct OpenCascade file parsers to read the CAD file
+    var reader = null;
+    if (fileName.endsWith(".step") || fileName.endsWith(".stp")) {
+      reader = new openCascade.STEPControl_Reader();
+    } else if (fileName.endsWith(".iges") || fileName.endsWith(".igs")) {
+      reader = new openCascade.IGESControl_Reader();
+    } else { console.error("opencascade.js can't parse this extension! (yet)"); }
+    const readResult = reader.ReadFile(fileName);            // Read the file
+    if (readResult === 1) {
+      console.log(fileName + " loaded successfully!     Converting to OCC now...");
+      const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
+      const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
+      console.log(fileName + " converted successfully!  Triangulating now...");
+
+      // Out with the old, in with the new!
+      scene.remove(scene.getObjectByName("shape"));
+      await addShape(openCascade, stepShape);
+      console.log(fileName + " triangulated and added to the scene!");
+
+      // Remove the file when we're done (otherwise we run into errors on reupload)
+      openCascade.FS.unlink("/" + fileName);
+    } else {
+      console.error("Something in OCCT went wrong trying to read " + fileName);
+    }
+  });
+};
+
 initOpenCascade().then(async openCascade => {
+
+  // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
+  document.getElementById("step-file").addEventListener(
+    'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0]); });
+  document.body.addEventListener("dragenter", (e) => { e.stopPropagation(); e.preventDefault(); }, false);
+  document.body.addEventListener("dragover",  (e) => { e.stopPropagation(); e.preventDefault(); }, false);
+  document.body.addEventListener("drop",      (e) => { e.stopPropagation(); e.preventDefault();
+    if (e.dataTransfer.files[0]) { loadSTEPorIGES(openCascade, e.dataTransfer.files[0]); }
+  }, false);
+
   let width = 50, height = 70, thickness = 30;
-  await addBottle(openCascade, width, height, thickness);
+  let bottle = MakeBottle(openCascade, width, height, thickness);
+  await addShape(openCascade, bottle);
   
   window.changeSliderWidth = value => {
     width = value;
-    scene.remove(scene.getObjectByName("bottle"));
-    addBottle(openCascade, width, height, thickness);
+    scene.remove(scene.getObjectByName("shape"));
+    let bottle = MakeBottle(openCascade, width, height, thickness);
+    addShape(openCascade, bottle);
   }
   window.changeSliderHeight = value => {
     height = value;
-    scene.remove(scene.getObjectByName("bottle"));
-    addBottle(openCascade, width, height, thickness);
+    scene.remove(scene.getObjectByName("shape"));
+    let bottle = MakeBottle(openCascade, width, height, thickness);
+    addShape(openCascade, bottle);
   }
   window.changeSliderThickness = value => {
     thickness = value;
-    scene.remove(scene.getObjectByName("bottle"));
-    addBottle(openCascade, width, height, thickness);
+    scene.remove(scene.getObjectByName("shape"));
+    let bottle = MakeBottle(openCascade, width, height, thickness);
+    addShape(openCascade, bottle);
   }
 });
