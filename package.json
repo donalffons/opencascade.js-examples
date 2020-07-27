@@ -21,7 +21,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "opencascade.js": "^0.1.16",
+    "opencascade.js": "^0.1.17",
     "three": "^0.116.1"
   }
 }
