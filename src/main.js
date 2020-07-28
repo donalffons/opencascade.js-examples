@@ -242,7 +242,7 @@ const loadSTEPorIGES = async (openCascade, inputFile) => {
   });
 };
 
-initOpenCascade().then(async openCascade => {
+initOpenCascade().then(oc => oc.ready).then(async openCascade => {
 
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
