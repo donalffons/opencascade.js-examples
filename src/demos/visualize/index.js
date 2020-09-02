@@ -8,12 +8,12 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
+  Group
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { initOpenCascade } from "opencascade.js";
-
-import openCascadeHelper from './openCascadeHelper';
+import visualize from '../../common/visualize'
 
 var scene = new Scene();
 var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -182,22 +182,19 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
 }
 
 const addShape = async (openCascade, shape) => {
-  openCascadeHelper.setOpenCascade(openCascade);
-  const facelist = await openCascadeHelper.tessellate(shape);
-  const [locVertexcoord, locNormalcoord, locTriIndices] = await openCascadeHelper.joinPrimitives(facelist);
-  const tot_triangle_count = facelist.reduce((a,b) => a + b.number_of_triangles, 0);
-  const [vertices, faces] = await openCascadeHelper.generateGeometry(tot_triangle_count, locVertexcoord, locNormalcoord, locTriIndices);
-
   const objectMat = new MeshStandardMaterial({
     color: new Color(0.9, 0.9, 0.9)
   });
-  const geometry = new Geometry();
-  geometry.vertices = vertices;
-  geometry.faces = faces;
-  const object = new Mesh(geometry, objectMat);
-  object.name = "shape";
-  object.rotation.x = -Math.PI / 2;
-  scene.add(object);
+  let geometries = visualize(openCascade, shape)
+  let group = new Group()
+  geometries.forEach(geometry => {
+    group.add(new Mesh(geometry, objectMat))
+
+  })
+
+  group.name = "shape";
+  group.rotation.x = -Math.PI / 2;
+  scene.add(group);
 }
 
 const loadFileAsync = async (file) => {
