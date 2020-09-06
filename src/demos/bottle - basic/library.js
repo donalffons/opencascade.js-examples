@@ -1,49 +1,89 @@
 import {
   AmbientLight,
-  Color,
   DirectionalLight,
-  Geometry,
-  Mesh,
-  MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
-  Group
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { initOpenCascade } from "opencascade.js";
-import visualize from '../../common/visualize'
-
-var scene = new Scene();
-var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-var renderer = new WebGLRenderer({antialias: true});
-const viewport = document.getElementById("viewport");
-const viewportRect = viewport.getBoundingClientRect();
-renderer.setSize(viewportRect.width, viewportRect.height);
-viewport.appendChild(renderer.domElement);
-
-const light = new AmbientLight(0x404040);
-scene.add(light);
-const directionalLight = new DirectionalLight(0xffffff, 0.5);
-directionalLight.position.set(0.5, 0.5, 0.5);
-scene.add(directionalLight);
-
-camera.position.set(0, 50, 100);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.screenSpacePanning = true;
-controls.target.set(0, 50, 0);
-controls.update();
-
-function animate() {
-  requestAnimationFrame(animate);
-	renderer.render(scene, camera);
+const loadFileAsync = async (file) => {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsText(file);
+  })
 }
-animate();
 
-const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
+const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
+  await loadFileAsync(inputFile).then(async (fileText) => {
+    const fileName = inputFile.name;
+    // Writes the uploaded file to Emscripten's Virtual Filesystem
+    openCascade.FS.createDataFile("/", fileName, fileText, true, true);
+
+    // Choose the correct OpenCascade file parsers to read the CAD file
+    var reader = null;
+    if (fileName.endsWith(".step") || fileName.endsWith(".stp")) {
+      reader = new openCascade.STEPControl_Reader();
+    } else if (fileName.endsWith(".iges") || fileName.endsWith(".igs")) {
+      reader = new openCascade.IGESControl_Reader();
+    } else { console.error("opencascade.js can't parse this extension! (yet)"); }
+    const readResult = reader.ReadFile(fileName);            // Read the file
+    if (readResult === 1) {
+      console.log(fileName + " loaded successfully!     Converting to OCC now...");
+      const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
+      const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
+      console.log(fileName + " converted successfully!  Triangulating now...");
+
+      // Out with the old, in with the new!
+      scene.remove(scene.getObjectByName("shape"));
+      await addFunction(openCascade, stepShape, scene);
+      console.log(fileName + " triangulated and added to the scene!");
+
+      // Remove the file when we're done (otherwise we run into errors on reupload)
+      openCascade.FS.unlink("/" + fileName);
+    } else {
+      console.error("Something in OCCT went wrong trying to read " + fileName);
+    }
+  });
+};
+export { loadSTEPorIGES };
+
+
+const setupThreeJSViewport = () => {
+  var scene = new Scene();
+  var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+  var renderer = new WebGLRenderer({antialias: true});
+  const viewport = document.getElementById("viewport");
+  const viewportRect = viewport.getBoundingClientRect();
+  renderer.setSize(viewportRect.width, viewportRect.height);
+  viewport.appendChild(renderer.domElement);
+
+  const light = new AmbientLight(0x404040);
+  scene.add(light);
+  const directionalLight = new DirectionalLight(0xffffff, 0.5);
+  directionalLight.position.set(0.5, 0.5, 0.5);
+  scene.add(directionalLight);
+
+  camera.position.set(0, 50, 100);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.screenSpacePanning = true;
+  controls.target.set(0, 50, 0);
+  controls.update();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+  animate();
+  return scene;
+}
+export { setupThreeJSViewport };
+
+const makeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   // Profile : Define Support Points
   const aPnt1 = new openCascade.gp_Pnt(-myWidth / 2., 0, 0);        
   const aPnt2 = new openCascade.gp_Pnt(-myWidth / 2., -myThickness / 4., 0);
@@ -180,96 +220,4 @@ const MakeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   
   return aRes;
 }
-
-const addShape = async (openCascade, shape) => {
-  const objectMat = new MeshStandardMaterial({
-    color: new Color(0.9, 0.9, 0.9)
-  });
-  let geometries = visualize(openCascade, shape)
-  let group = new Group()
-  geometries.forEach(geometry => {
-    group.add(new Mesh(geometry, objectMat))
-
-  })
-
-  group.name = "shape";
-  group.rotation.x = -Math.PI / 2;
-  scene.add(group);
-}
-
-const loadFileAsync = async (file) => {
-  return new Promise((resolve, reject) => {
-    let reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsText(file);
-  })
-}
-
-const loadSTEPorIGES = async (openCascade, inputFile) => {
-  await loadFileAsync(inputFile).then(async (fileText) => {
-    const fileName = inputFile.name;
-    // Writes the uploaded file to Emscripten's Virtual Filesystem
-    openCascade.FS.createDataFile("/", fileName, fileText, true, true);
-
-    // Choose the correct OpenCascade file parsers to read the CAD file
-    var reader = null;
-    if (fileName.endsWith(".step") || fileName.endsWith(".stp")) {
-      reader = new openCascade.STEPControl_Reader();
-    } else if (fileName.endsWith(".iges") || fileName.endsWith(".igs")) {
-      reader = new openCascade.IGESControl_Reader();
-    } else { console.error("opencascade.js can't parse this extension! (yet)"); }
-    const readResult = reader.ReadFile(fileName);            // Read the file
-    if (readResult === 1) {
-      console.log(fileName + " loaded successfully!     Converting to OCC now...");
-      const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
-      const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
-      console.log(fileName + " converted successfully!  Triangulating now...");
-
-      // Out with the old, in with the new!
-      scene.remove(scene.getObjectByName("shape"));
-      await addShape(openCascade, stepShape);
-      console.log(fileName + " triangulated and added to the scene!");
-
-      // Remove the file when we're done (otherwise we run into errors on reupload)
-      openCascade.FS.unlink("/" + fileName);
-    } else {
-      console.error("Something in OCCT went wrong trying to read " + fileName);
-    }
-  });
-};
-
-initOpenCascade().then(oc => oc.ready).then(async openCascade => {
-
-  // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
-  document.getElementById("step-file").addEventListener(
-    'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0]); });
-  document.body.addEventListener("dragenter", (e) => { e.stopPropagation(); e.preventDefault(); }, false);
-  document.body.addEventListener("dragover",  (e) => { e.stopPropagation(); e.preventDefault(); }, false);
-  document.body.addEventListener("drop",      (e) => { e.stopPropagation(); e.preventDefault();
-    if (e.dataTransfer.files[0]) { loadSTEPorIGES(openCascade, e.dataTransfer.files[0]); }
-  }, false);
-
-  let width = 50, height = 70, thickness = 30;
-  let bottle = MakeBottle(openCascade, width, height, thickness);
-  await addShape(openCascade, bottle);
-  
-  window.changeSliderWidth = value => {
-    width = value;
-    scene.remove(scene.getObjectByName("shape"));
-    let bottle = MakeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle);
-  }
-  window.changeSliderHeight = value => {
-    height = value;
-    scene.remove(scene.getObjectByName("shape"));
-    let bottle = MakeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle);
-  }
-  window.changeSliderThickness = value => {
-    thickness = value;
-    scene.remove(scene.getObjectByName("shape"));
-    let bottle = MakeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle);
-  }
-});
+export { makeBottle };
