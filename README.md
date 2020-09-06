@@ -6,7 +6,7 @@ This is a repository with examples for [OpenCascade.js](https://github.com/donal
 
 # Live Preview
 
-A live preview of this project lives [here](https://donalffons.github.io/opencascade.js-examples/).
+A live preview of this project lives [here](https://donalffons.github.io/opencascade.js-examples/index.html).
 
 # How to run this example locally
 
