@@ -9,12 +9,12 @@ const openCascadeHelper = {
   },
   tessellate (shape) {
     const facelist = [];
-    new this.openCascade.BRepMesh_IncrementalMesh(shape, 0.1);
-    const ExpFace = new this.openCascade.TopExp_Explorer();
-    for(ExpFace.Init(shape, this.openCascade.TopAbs_FACE); ExpFace.More(); ExpFace.Next()) {
-      const myFace = this.openCascade.TopoDS.prototype.Face(ExpFace.Current());
-      const aLocation = new this.openCascade.TopLoc_Location();
-      const myT = this.openCascade.BRep_Tool.prototype.Triangulation(myFace, aLocation);
+    new this.openCascade.BRepMesh_IncrementalMesh_2(shape, 0.1, false, 0.5, false);
+    const ExpFace = new this.openCascade.TopExp_Explorer_1();
+    for(ExpFace.Init(shape, this.openCascade.TopAbs_ShapeEnum.TopAbs_FACE, this.openCascade.TopAbs_ShapeEnum.TopAbs_SHAPE); ExpFace.More(); ExpFace.Next()) {
+      const myFace = this.openCascade.TopoDS.Face_1(ExpFace.Current());
+      const aLocation = new this.openCascade.TopLoc_Location_1();
+      const myT = this.openCascade.BRep_Tool.Triangulation(myFace, aLocation);
       if(myT.IsNull()) {
         continue;
       }
@@ -26,7 +26,7 @@ const openCascadeHelper = {
         number_of_triangles: 0,
       };
 
-      const pc = new this.openCascade.Poly_Connect(myT);
+      const pc = new this.openCascade.Poly_Connect_2(myT);
       const Nodes = myT.get().Nodes();
 
       // write vertex buffer
@@ -39,9 +39,8 @@ const openCascadeHelper = {
       }
 
       // write normal buffer
-      const myNormal = new this.openCascade.TColgp_Array1OfDir(Nodes.Lower(), Nodes.Upper());
-      const SST = new this.openCascade.StdPrs_ToolTriangulatedShape();
-      SST.Normal(myFace, pc, myNormal);
+      const myNormal = new this.openCascade.TColgp_Array1OfDir_2(Nodes.Lower(), Nodes.Upper());
+      this.openCascade.StdPrs_ToolTriangulatedShape.Normal(myFace, pc, myNormal);
       this_face.normal_coord = new Array(myNormal.Length() * 3);
       for(let i = myNormal.Lower(); i <= myNormal.Upper(); i++) {
         const d = myNormal.Value(i).Transformed(aLocation.Transformation());
@@ -55,7 +54,7 @@ const openCascadeHelper = {
       // this_face.tex_coord = null;
       
       // write triangle buffer
-      const orient = myFace.Orientation();
+      const orient = myFace.Orientation_1();
       const triangles = myT.get().Triangles();
       this_face.tri_indexes = new Array(triangles.Length() * 3);
       let validFaceTriCount = 0;
@@ -64,7 +63,7 @@ const openCascadeHelper = {
         let n1 = t.Value(1);
         let n2 = t.Value(2);
         let n3 = t.Value(3);
-        if(orient !== this.openCascade.TopAbs_FORWARD) {
+        if(orient !== this.openCascade.TopAbs_Orientation.TopAbs_FORWARD) {
           let tmp = n1;
           n1 = n2;
           n2 = tmp;

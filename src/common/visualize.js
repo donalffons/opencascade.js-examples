@@ -2,24 +2,24 @@ import * as THREE from 'three'
 
 export default function visualize(openCascade, shape){
   let geometries = []
-  const ExpFace = new openCascade.TopExp_Explorer();
-  for(ExpFace.Init(shape, openCascade.TopAbs_FACE); ExpFace.More(); ExpFace.Next()) {
-    const myFace = openCascade.TopoDS.prototype.Face(ExpFace.Current());
+  const ExpFace = new openCascade.TopExp_Explorer_1();
+  for(ExpFace.Init(shape, openCascade.TopAbs_ShapeEnum.TopAbs_FACE, openCascade.TopAbs_ShapeEnum.TopAbs_SHAPE); ExpFace.More(); ExpFace.Next()) {
+    const myFace = openCascade.TopoDS.Face_1(ExpFace.Current());
 
     try{
       //in case some of the faces can not been visualized
-      new openCascade.BRepMesh_IncrementalMesh(myFace, 0.1);
+      new openCascade.BRepMesh_IncrementalMesh_2(myFace, 0.1, false, 0.5, false);
     }catch(e){
-      console.error('face visualizing failed')
+      console.error('face visualizi<ng failed')
       continue
     }
-    const aLocation = new openCascade.TopLoc_Location();
-    const myT = openCascade.BRep_Tool.prototype.Triangulation(myFace, aLocation);
+    const aLocation = new openCascade.TopLoc_Location_1();
+    const myT = openCascade.BRep_Tool.Triangulation(myFace, aLocation);
     if(myT.IsNull()) {
       continue;
     }
 
-    const pc = new openCascade.Poly_Connect(myT);
+    const pc = new openCascade.Poly_Connect_2(myT);
     const Nodes = myT.get().Nodes();
     let vertices = new Float32Array(Nodes.Length() * 3)
 
@@ -33,9 +33,8 @@ export default function visualize(openCascade, shape){
     }
 
     // write normal buffer
-    const myNormal = new openCascade.TColgp_Array1OfDir(Nodes.Lower(), Nodes.Upper());
-    const SST = new openCascade.StdPrs_ToolTriangulatedShape();
-    SST.Normal(myFace, pc, myNormal);
+    const myNormal = new openCascade.TColgp_Array1OfDir_2(Nodes.Lower(), Nodes.Upper());
+    openCascade.StdPrs_ToolTriangulatedShape.Normal(myFace, pc, myNormal);
 
     let normals = new Float32Array(myNormal.Length() * 3)
     for(let i = myNormal.Lower(); i <= myNormal.Upper(); i++) {
@@ -43,11 +42,11 @@ export default function visualize(openCascade, shape){
 
       normals[3 * (i - 1)] = d.X();
       normals[3 * (i - 1) + 1] = d.Y();
-      normals[3 * (i - 1) + 2] = d.Z()
+      normals[3 * (i - 1) + 2] = d.Z();
     }
-      
+    
     // write triangle buffer
-    const orient = myFace.Orientation();
+    const orient = myFace.Orientation_1();
     const triangles = myT.get().Triangles();
     let indices
     let triLength = triangles.Length() * 3
@@ -61,7 +60,7 @@ export default function visualize(openCascade, shape){
       let n1 = t.Value(1);
       let n2 = t.Value(2);
       let n3 = t.Value(3);
-      if(orient !== openCascade.TopAbs_FORWARD) {
+      if(orient !== openCascade.TopAbs_Orientation.TopAbs_FORWARD) {
         let tmp = n1;
         n1 = n2;
         n2 = tmp;
