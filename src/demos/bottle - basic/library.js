@@ -24,13 +24,13 @@ const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
 
     // Choose the correct OpenCascade file parsers to read the CAD file
     var reader = null;
-    if (fileName.endsWith(".step") || fileName.endsWith(".stp")) {
-      reader = new openCascade.STEPControl_Reader();
-    } else if (fileName.endsWith(".iges") || fileName.endsWith(".igs")) {
-      reader = new openCascade.IGESControl_Reader();
+    if (fileName.toLowerCase().endsWith(".step") || fileName.toLowerCase().endsWith(".stp")) {
+      reader = new openCascade.STEPControl_Reader_1();
+    } else if (fileName.toLowerCase().endsWith(".iges") || fileName.toLowerCase().endsWith(".igs")) {
+      reader = new openCascade.IGESControl_Reader_1();
     } else { console.error("opencascade.js can't parse this extension! (yet)"); }
     const readResult = reader.ReadFile(fileName);            // Read the file
-    if (readResult === 1) {
+    if (readResult === openCascade.IFSelect_ReturnStatus.IFSelect_RetDone) {
       console.log(fileName + " loaded successfully!     Converting to OCC now...");
       const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
       const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
