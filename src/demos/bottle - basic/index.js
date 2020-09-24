@@ -47,19 +47,19 @@ initOpenCascade().then(oc => oc.ready).then(async openCascade => {
   await addShape(openCascade, bottle, scene);
   
   window.changeSliderWidth = value => {
-    width = value;
+    height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
     addShape(openCascade, bottle, scene);
   }
   window.changeSliderHeight = value => {
-    height = value;
+    height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
     addShape(openCascade, bottle, scene);
   }
   window.changeSliderThickness = value => {
-    thickness = value;
+    height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
     addShape(openCascade, bottle, scene);
