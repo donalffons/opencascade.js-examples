@@ -163,7 +163,7 @@ const makeBottle = (openCascade, myWidth, myHeight, myThickness) => {
     }
   }
 
-  const facesToRemove = new openCascade.TopTools_ListOfShape();
+  const facesToRemove = new openCascade.TopTools_ListOfShape_1();
   facesToRemove.Append_1(faceToRemove);
   const s = myBody.Shape();
   myBody = new openCascade.BRepOffsetAPI_MakeThickSolid_1();
