@@ -1,7 +1,7 @@
 # OpenCascade.js Examples
 
 This is a repository with examples for [OpenCascade.js](https://github.com/donalffons/opencascade.js). Currently, it contains:
-* The [Bottle Tutorial](https://www.opencascade.com/doc/occt-7.4.0/overview/html/occt__tutorial.html) from the official OpenCascade Documentation
+* The [Bottle Tutorial](https://old.opencascade.com/doc/occt-7.4.0/overview/html/occt__tutorial.html) from the official OpenCascade Documentation
 * A loader for STEP / IGES files, which uses Emscripten `FS` object in JavaScript to simulate a file system
 
 # Live Preview
