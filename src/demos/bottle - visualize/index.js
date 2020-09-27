@@ -8,7 +8,7 @@ import { makeBottle, loadSTEPorIGES, setupThreeJSViewport } from '../bottle - ba
 import { initOpenCascade } from "opencascade.js";
 import visualize from '../../common/visualize'
 
-const addShape = async (openCascade, shape, scene) => {
+const addShapeToScene = async (openCascade, shape, scene) => {
   const objectMat = new MeshStandardMaterial({
     color: new Color(0.9, 0.9, 0.9)
   });
@@ -28,33 +28,33 @@ const scene = setupThreeJSViewport();
 initOpenCascade().then(oc => oc.ready).then(async openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
-    'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShape, scene); });
+    'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
   document.body.addEventListener("dragenter", (e) => { e.stopPropagation(); e.preventDefault(); }, false);
   document.body.addEventListener("dragover",  (e) => { e.stopPropagation(); e.preventDefault(); }, false);
   document.body.addEventListener("drop",      (e) => { e.stopPropagation(); e.preventDefault();
-    if (e.dataTransfer.files[0]) { loadSTEPorIGES(openCascade, e.dataTransfer.files[0], addShape, scene); }
+    if (e.dataTransfer.files[0]) { loadSTEPorIGES(openCascade, e.dataTransfer.files[0], addShapeToScene, scene); }
   }, false);
 
   let width = 50, height = 70, thickness = 30;
   let bottle = makeBottle(openCascade, width, height, thickness);
-  await addShape(openCascade, bottle, scene);
+  await addShapeToScene(openCascade, bottle, scene);
   
   window.changeSliderWidth = value => {
     height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle, scene);
+    addShapeToScene(openCascade, bottle, scene);
   }
   window.changeSliderHeight = value => {
     height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle, scene);
+    addShapeToScene(openCascade, bottle, scene);
   }
   window.changeSliderThickness = value => {
     height = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
-    addShape(openCascade, bottle, scene);
+    addShapeToScene(openCascade, bottle, scene);
   }
 });

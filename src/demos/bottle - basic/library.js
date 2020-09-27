@@ -4,8 +4,13 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
+  Color,
+  Geometry,
+  Mesh,
+  MeshStandardMaterial,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import openCascadeHelper from '../../common/openCascadeHelper';
 
 const loadFileAsync = async (file) => {
   return new Promise((resolve, reject) => {
@@ -220,3 +225,23 @@ const makeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   return aRes;
 }
 export { makeBottle };
+
+const addShapeToScene = async (openCascade, shape, scene) => {
+  openCascadeHelper.setOpenCascade(openCascade);
+  const facelist = await openCascadeHelper.tessellate(shape);
+  const [locVertexcoord, locNormalcoord, locTriIndices] = await openCascadeHelper.joinPrimitives(facelist);
+  const tot_triangle_count = facelist.reduce((a,b) => a + b.number_of_triangles, 0);
+  const [vertices, faces] = await openCascadeHelper.generateGeometry(tot_triangle_count, locVertexcoord, locNormalcoord, locTriIndices);
+
+  const objectMat = new MeshStandardMaterial({
+    color: new Color(0.9, 0.9, 0.9)
+  });
+  const geometry = new Geometry();
+  geometry.vertices = vertices;
+  geometry.faces = faces;
+  const object = new Mesh(geometry, objectMat);
+  object.name = "shape";
+  object.rotation.x = -Math.PI / 2;
+  scene.add(object);
+}
+export { addShapeToScene };
