@@ -1,11 +1,17 @@
 import {
+  initOpenCascade,
+  ocCore,
+  ocModelingAlgorithms,
+  TKService,
+  TKV3d,
+} from "opencascade.js";
+import {
   Color,
   Mesh,
   MeshStandardMaterial,
   Group
 } from 'three';
 import { makeBottle, loadSTEPorIGES, setupThreeJSViewport } from '../bottle - basic/library';
-import { initOpenCascade } from "opencascade.js";
 import visualize from '../../common/visualize'
 
 const addShapeToScene = async (openCascade, shape, scene) => {
@@ -27,7 +33,14 @@ const addShapeToScene = async (openCascade, shape, scene) => {
 
 const scene = setupThreeJSViewport();
 
-initOpenCascade().then(oc => oc.ready).then(async openCascade => {
+initOpenCascade({
+  libs: [
+    ocCore,
+    ocModelingAlgorithms,
+    TKService,
+    TKV3d,
+  ]
+}).then(async openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
     'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
