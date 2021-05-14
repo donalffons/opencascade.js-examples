@@ -23,33 +23,45 @@ const loadFileAsync = async (file) => {
 
 const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
   await loadFileAsync(inputFile).then(async (fileText) => {
-    const fileName = inputFile.name;
+    const fileType = (() => {
+      switch(inputFile.name.toLowerCase().split(".").pop()) {
+        case "step":
+        case "stp":
+          return "step";
+        case "iges":
+        case "igs":
+          return "iges";
+        default:
+          return undefined;
+      }
+    })();
+    console.log(fileType);
     // Writes the uploaded file to Emscripten's Virtual Filesystem
-    openCascade.FS.createDataFile("/", fileName, fileText, true, true);
+    openCascade.FS.createDataFile("/", `file.${fileType}`, fileText, true, true);
 
     // Choose the correct OpenCascade file parsers to read the CAD file
     var reader = null;
-    if (fileName.toLowerCase().endsWith(".step") || fileName.toLowerCase().endsWith(".stp")) {
+    if (fileType === "step") {
       reader = new openCascade.STEPControl_Reader_1();
-    } else if (fileName.toLowerCase().endsWith(".iges") || fileName.toLowerCase().endsWith(".igs")) {
+    } else if (fileType === "iges") {
       reader = new openCascade.IGESControl_Reader_1();
     } else { console.error("opencascade.js can't parse this extension! (yet)"); }
-    const readResult = reader.ReadFile(fileName);            // Read the file
+    const readResult = reader.ReadFile(`file.${fileType}`);            // Read the file
     if (readResult === openCascade.IFSelect_ReturnStatus.IFSelect_RetDone) {
-      console.log(fileName + " loaded successfully!     Converting to OCC now...");
+      console.log("file loaded successfully!     Converting to OCC now...");
       const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
       const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
-      console.log(fileName + " converted successfully!  Triangulating now...");
+      console.log(inputFile.name + " converted successfully!  Triangulating now...");
 
       // Out with the old, in with the new!
       scene.remove(scene.getObjectByName("shape"));
       await addFunction(openCascade, stepShape, scene);
-      console.log(fileName + " triangulated and added to the scene!");
+      console.log(inputFile.name + " triangulated and added to the scene!");
 
       // Remove the file when we're done (otherwise we run into errors on reupload)
-      openCascade.FS.unlink("/" + fileName);
+      openCascade.FS.unlink(`/file.${fileType}`);
     } else {
-      console.error("Something in OCCT went wrong trying to read " + fileName);
+      console.error("Something in OCCT went wrong trying to read " + inputFile.name);
     }
   });
 };
