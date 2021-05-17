@@ -4,6 +4,12 @@ import {
   ocModelingAlgorithms,
   TKService,
   TKV3d,
+  TKXSBase,
+  TKSTEPBase,
+  TKSTEPAttr,
+  TKSTEP209,
+  TKSTEP,
+  TKIGES,
 } from "opencascade.js";
 
 import {
@@ -21,6 +27,12 @@ initOpenCascade({
     ocModelingAlgorithms,
     TKService,
     TKV3d,
+    TKXSBase,
+    TKSTEPBase,
+    TKSTEPAttr,
+    TKSTEP209,
+    TKSTEP,
+    TKIGES,
   ]
 }).then(async openCascade => {
   document.getElementById("step-file").addEventListener('input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });

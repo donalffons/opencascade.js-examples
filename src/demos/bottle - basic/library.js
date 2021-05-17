@@ -49,7 +49,7 @@ const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
     const readResult = reader.ReadFile(`file.${fileType}`);            // Read the file
     if (readResult === openCascade.IFSelect_ReturnStatus.IFSelect_RetDone) {
       console.log("file loaded successfully!     Converting to OCC now...");
-      const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
+      const numRootsTransferred = reader.TransferRoots(new openCascade.Message_ProgressRange_1());    // Translate all transferable roots to OpenCascade
       const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
       console.log(inputFile.name + " converted successfully!  Triangulating now...");
 

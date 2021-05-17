@@ -4,6 +4,12 @@ import {
   ocModelingAlgorithms,
   TKService,
   TKV3d,
+  TKXSBase,
+  TKSTEPBase,
+  TKSTEPAttr,
+  TKSTEP209,
+  TKSTEP,
+  TKIGES,
 } from "opencascade.js";
 import {
   Color,
@@ -39,6 +45,12 @@ initOpenCascade({
     ocModelingAlgorithms,
     TKService,
     TKV3d,
+    TKXSBase,
+    TKSTEPBase,
+    TKSTEPAttr,
+    TKSTEP209,
+    TKSTEP,
+    TKIGES,
   ]
 }).then(async openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
