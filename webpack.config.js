@@ -48,8 +48,12 @@ module.exports = {
       ],
     }),
   ],
-  node: {
-    fs: "empty",
-    child_process: "empty"
-  }
+  resolve: {
+    fallback: {
+      fs: false,
+      child_process: false,
+      path: false,
+      crypto: false,
+    }
+  },
 };
