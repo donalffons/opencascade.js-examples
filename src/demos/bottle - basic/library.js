@@ -12,7 +12,7 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import openCascadeHelper from '../../common/openCascadeHelper';
 
-const loadFileAsync = async (file) => {
+const loadFileAsync = (file) => {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -35,7 +35,6 @@ const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
           return undefined;
       }
     })();
-    console.log(fileType);
     // Writes the uploaded file to Emscripten's Virtual Filesystem
     openCascade.FS.createDataFile("/", `file.${fileType}`, fileText, true, true);
 

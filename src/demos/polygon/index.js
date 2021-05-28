@@ -23,6 +23,6 @@ initOpenCascade({
     TKService,
     TKV3d,
   ]
-}).then(async openCascade => {
-  await addShapeToScene(openCascade, makePolygon(openCascade), scene); 
+}).then(openCascade => {
+  addShapeToScene(openCascade, makePolygon(openCascade), scene); 
 });

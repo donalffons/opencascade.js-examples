@@ -52,7 +52,7 @@ initOpenCascade({
     TKSTEP,
     TKIGES,
   ]
-}).then(async openCascade => {
+}).then(openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
     'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
@@ -63,7 +63,7 @@ initOpenCascade({
   }, false);
   let width = 50, height = 70, thickness = 30;
   let bottle = makeBottle(openCascade, width, height, thickness);
-  await addShapeToScene(openCascade, bottle, scene);
+  addShapeToScene(openCascade, bottle, scene);
 
 /*
   //to test memory leak for visualize function
