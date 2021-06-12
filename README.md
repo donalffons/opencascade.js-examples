@@ -15,6 +15,8 @@
   </p>
 </p>
 
+(These instructions are for the upcoming `@beta` release.)
+
 # OpenCascade.js Examples
 
 This is a repository with examples for [OpenCascade.js](https://github.com/donalffons/opencascade.js). Currently, it contains:
