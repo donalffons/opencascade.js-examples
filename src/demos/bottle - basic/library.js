@@ -12,7 +12,7 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import openCascadeHelper from '../../common/openCascadeHelper';
 
-const loadFileAsync = async (file) => {
+const loadFileAsync = (file) => {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -35,7 +35,6 @@ const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
           return undefined;
       }
     })();
-    console.log(fileType);
     // Writes the uploaded file to Emscripten's Virtual Filesystem
     openCascade.FS.createDataFile("/", `file.${fileType}`, fileText, true, true);
 
@@ -49,7 +48,7 @@ const loadSTEPorIGES = async (openCascade, inputFile, addFunction, scene) => {
     const readResult = reader.ReadFile(`file.${fileType}`);            // Read the file
     if (readResult === openCascade.IFSelect_ReturnStatus.IFSelect_RetDone) {
       console.log("file loaded successfully!     Converting to OCC now...");
-      const numRootsTransferred = reader.TransferRoots();    // Translate all transferable roots to OpenCascade
+      const numRootsTransferred = reader.TransferRoots(new openCascade.Message_ProgressRange_1());    // Translate all transferable roots to OpenCascade
       const stepShape           = reader.OneShape();         // Obtain the results of translation in one OCCT shape
       console.log(inputFile.name + " converted successfully!  Triangulating now...");
 

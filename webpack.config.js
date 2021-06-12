@@ -24,7 +24,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /opencascade\.wasm\.wasm$/,
+        test: /\.wasm$/,
         type: "javascript/auto",
         loader: "file-loader",
         options: {
@@ -48,7 +48,12 @@ module.exports = {
       ],
     }),
   ],
-  node: {
-    fs: "empty"
-  }
+  resolve: {
+    fallback: {
+      fs: false,
+      child_process: false,
+      path: false,
+      crypto: false,
+    }
+  },
 };

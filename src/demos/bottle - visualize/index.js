@@ -1,11 +1,23 @@
 import {
+  initOpenCascade,
+  ocCore,
+  ocModelingAlgorithms,
+  TKService,
+  TKV3d,
+  TKXSBase,
+  TKSTEPBase,
+  TKSTEPAttr,
+  TKSTEP209,
+  TKSTEP,
+  TKIGES,
+} from "opencascade.js";
+import {
   Color,
   Mesh,
   MeshStandardMaterial,
   Group
 } from 'three';
 import { makeBottle, loadSTEPorIGES, setupThreeJSViewport } from '../bottle - basic/library';
-import { initOpenCascade } from "opencascade.js";
 import visualize from '../../common/visualize'
 
 const addShapeToScene = async (openCascade, shape, scene) => {
@@ -27,7 +39,20 @@ const addShapeToScene = async (openCascade, shape, scene) => {
 
 const scene = setupThreeJSViewport();
 
-initOpenCascade().then(oc => oc.ready).then(async openCascade => {
+initOpenCascade({
+  libs: [
+    ocCore,
+    ocModelingAlgorithms,
+    TKService,
+    TKV3d,
+    TKXSBase,
+    TKSTEPBase,
+    TKSTEPAttr,
+    TKSTEP209,
+    TKSTEP,
+    TKIGES,
+  ]
+}).then(openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
     'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
@@ -38,7 +63,7 @@ initOpenCascade().then(oc => oc.ready).then(async openCascade => {
   }, false);
   let width = 50, height = 70, thickness = 30;
   let bottle = makeBottle(openCascade, width, height, thickness);
-  await addShapeToScene(openCascade, bottle, scene);
+  addShapeToScene(openCascade, bottle, scene);
 
 /*
   //to test memory leak for visualize function
