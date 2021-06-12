@@ -9,7 +9,7 @@
     <br />
     <a href="https://donalffons.github.io/opencascade.js-examples/index.html">Live Preview</a>
     ·
-    <a href="https://stackblitz.com/github/donalffons/opencascade.js-examples">Start coding on Stackblitz</a>
+    <a href="https://codesandbox.io/s/github/donalffons/opencascade.js-examples?file=/README.md">Start coding on CodeSandbox</a>
   </p>
 </p>
 
@@ -24,6 +24,7 @@ This is a repository with examples for [OpenCascade.js](https://github.com/donal
 # Live Preview
 
 A live preview of this project lives [here](https://donalffons.github.io/opencascade.js-examples/index.html).
+You can also use [CodeSandbox](https://codesandbox.io/s/github/donalffons/opencascade.js-examples?file=/README.md) to start experimenting with the code from your browser.
 
 # How to run this example locally
 
