@@ -6,8 +6,6 @@
   <p align="center">
     This is a repository with examples for <a href="https://github.com/donalffons/opencascade.js">OpenCascade.js</>
     <br />
-    <a href="./doc/README.md"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://donalffons.github.io/opencascade.js-examples/index.html">Live Preview</a>
     ·
