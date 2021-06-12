@@ -4,7 +4,7 @@
   <h3 align="center">OpenCascade.js Examples</h3>
 
   <p align="center">
-    This is a repository with examples for [OpenCascade.js](https://github.com/donalffons/opencascade.js)
+    This is a repository with examples for <a href="https://github.com/donalffons/opencascade.js">OpenCascade.js</>
     <br />
     <a href="./doc/README.md"><strong>Explore the docs »</strong></a>
     <br />
