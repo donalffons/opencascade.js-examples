@@ -2407,10 +2407,10 @@ onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-opencascade.js@^2.0.0-beta.2b27f74:
-  version "2.0.0-beta.2b27f74"
-  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-2.0.0-beta.2b27f74.tgz#50c200a44b137987c66fd47de0a07284ca6692fc"
-  integrity sha512-Mo7Ni9zEL3qoY6WkHgRRN7JFGEzM+fsWQpwevqkyeIJQuQtsaQlrMMzbC5ZHdCzAkC3Z2A67kh6z/zpUrh48eA==
+opencascade.js@2.0.0-beta.e96854d:
+  version "2.0.0-beta.e96854d"
+  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-2.0.0-beta.e96854d.tgz#391b668f5027784e35f54b986db199921cd0bdf6"
+  integrity sha512-8KD/oK14M+nQPu8tVaNwEISxdQznhz48GBJA5V7rmvISGGQGq1y3VUvxzr//YoAc2Vg2hfaprIDic3N9eN6lOg==
 
 opn@^5.5.0:
   version "5.5.0"
@@ -3660,9 +3660,9 @@ wrappy@1:
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
 ws@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
-  integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.2.tgz#dd5cdbd57a9979916097652d78f1cc5faea0c32e"
+  integrity sha512-zmhltoSR8u1cnDsD43TX59mzoMZsLKqUweyYBAIvTngR3shc0W6aOZylZmq/7hqyVxPdi+5Ud2QInblgyE72fw==
   dependencies:
     async-limiter "~1.0.0"
 
