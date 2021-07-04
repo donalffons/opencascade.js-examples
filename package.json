@@ -22,7 +22,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "opencascade.js": "^2.0.0-beta.88b46d0",
+    "opencascade.js": "2.0.0-beta.88b46d0",
     "three": "^0.124.0"
   }
 }
