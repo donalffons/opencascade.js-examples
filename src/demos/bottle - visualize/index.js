@@ -1,16 +1,4 @@
-import {
-  initOpenCascade,
-  ocCore,
-  ocModelingAlgorithms,
-  TKService,
-  TKV3d,
-  TKXSBase,
-  TKSTEPBase,
-  TKSTEPAttr,
-  TKSTEP209,
-  TKSTEP,
-  TKIGES,
-} from "opencascade.js";
+import initOpenCascade from "opencascade.js";
 import {
   Color,
   Mesh,
@@ -39,20 +27,7 @@ const addShapeToScene = async (openCascade, shape, scene) => {
 
 const scene = setupThreeJSViewport();
 
-initOpenCascade({
-  libs: [
-    ocCore,
-    ocModelingAlgorithms,
-    TKService,
-    TKV3d,
-    TKXSBase,
-    TKSTEPBase,
-    TKSTEPAttr,
-    TKSTEP209,
-    TKSTEP,
-    TKIGES,
-  ]
-}).then(openCascade => {
+initOpenCascade().then(openCascade => {
   // Allow users to upload STEP Files by either "File Selector" or "Drag and Drop".
   document.getElementById("step-file").addEventListener(
     'input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
@@ -84,7 +59,9 @@ initOpenCascade({
     width = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
+    const now = Date.now();
     addShapeToScene(openCascade, bottle, scene);
+    console.log(Date.now() - now)
   }
   window.changeSliderHeight = value => {
     height = parseInt(value);

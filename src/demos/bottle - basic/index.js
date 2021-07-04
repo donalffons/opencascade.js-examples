@@ -1,16 +1,4 @@
-import {
-  initOpenCascade,
-  ocCore,
-  ocModelingAlgorithms,
-  TKService,
-  TKV3d,
-  TKXSBase,
-  TKSTEPBase,
-  TKSTEPAttr,
-  TKSTEP209,
-  TKSTEP,
-  TKIGES,
-} from "opencascade.js";
+import initOpenCascade from "opencascade.js";
 
 import {
   loadSTEPorIGES,
@@ -21,20 +9,7 @@ import {
 
 const scene = setupThreeJSViewport();
 
-initOpenCascade({
-  libs: [
-    ocCore,
-    ocModelingAlgorithms,
-    TKService,
-    TKV3d,
-    TKXSBase,
-    TKSTEPBase,
-    TKSTEPAttr,
-    TKSTEP209,
-    TKSTEP,
-    TKIGES,
-  ]
-}).then(openCascade => {
+initOpenCascade().then(openCascade => {
   document.getElementById("step-file").addEventListener('input', async (event) => { await loadSTEPorIGES(openCascade, event.srcElement.files[0], addShapeToScene, scene); });
 
   let width = 50, height = 70, thickness = 30;
@@ -45,7 +20,9 @@ initOpenCascade({
     width = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
     let bottle = makeBottle(openCascade, width, height, thickness);
+    const now = Date.now();
     addShapeToScene(openCascade, bottle, scene);
+    console.log(Date.now() - now)
   }
   window.changeSliderHeight = value => {
     height = parseInt(value);
