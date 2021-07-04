@@ -9,7 +9,7 @@
     <br />
     <a href="https://donalffons.github.io/opencascade.js-examples/index.html">Live Preview</a>
     ·
-    <a href="https://codesandbox.io/s/github/donalffons/opencascade.js-examples?file=/README.md">Start coding on CodeSandbox</a>
+    <a href="https://stackblitz.com/github/donalffons/opencascade.js-examples/tree/master?file=README.md">Start coding on Stackblitz</a>
   </p>
 </p>
 
