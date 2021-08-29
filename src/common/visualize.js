@@ -32,9 +32,9 @@ export default function visualize(openCascade, shape){
       const t1 = aLocation.Transformation()
       const p = Nodes.Value(i)
       const p1 = p.Transformed(t1);
-      vertices[3 * (i - 1)] = p.X()
-      vertices[3 * (i - 1) + 1] = p.Y()
-      vertices[3 * (i - 1) + 2] = p.Z()
+      vertices[3 * (i - 1)] = p1.X()
+      vertices[3 * (i - 1) + 1] = p1.Y()
+      vertices[3 * (i - 1) + 2] = p1.Z()
       p.delete()
       t1.delete()
       p1.delete()
