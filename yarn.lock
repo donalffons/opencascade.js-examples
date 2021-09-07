@@ -2407,10 +2407,10 @@ onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-opencascade.js@^2.0.0-beta.c3007e9:
-  version "2.0.0-beta.c3007e9"
-  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-2.0.0-beta.c3007e9.tgz#7a63cb74cc1f805c73d85a0e47d8a48a82cf829f"
-  integrity sha512-Y1RB7PiIBSjB5Zuds7fKKJhEj8Xr53bku7Nf0I4HNYolnliq7xSYEo9OstzKC/iZ3i56GGPBxp5Ku3J+jK6kaQ==
+opencascade.js@^2.0.0-beta.45aa6c6:
+  version "2.0.0-beta.45aa6c6"
+  resolved "https://registry.yarnpkg.com/opencascade.js/-/opencascade.js-2.0.0-beta.45aa6c6.tgz#d0adc1fa8530ab8be5ccb860f3e9906073af6d3e"
+  integrity sha512-WLeIAvX5xzwtIiJlrmHWwRS17pU5zPYfr5kbUHwxt9k47AkjjY+qtsn8Xe7hZwb8TdxfjkpjS0EPeRft94MnKA==
 
 opn@^5.5.0:
   version "5.5.0"
