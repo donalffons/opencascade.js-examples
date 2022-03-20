@@ -5,5 +5,5 @@ import { makePolygon } from './library';
 const scene = setupThreeJSViewport();
 
 initOpenCascade().then(openCascade => {
-  addShapeToScene(openCascade, makePolygon(openCascade), scene); 
+  addShapeToScene(openCascade, makePolygon(openCascade), scene);
 });

@@ -15,7 +15,7 @@ initOpenCascade().then(openCascade => {
   let width = 50, height = 70, thickness = 30;
   let bottle = makeBottle(openCascade, width, height, thickness);
   addShapeToScene(openCascade, bottle, scene);
-  
+
   window.changeSliderWidth = value => {
     width = parseInt(value);
     scene.remove(scene.getObjectByName("shape"));
