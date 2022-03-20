@@ -16,21 +16,21 @@ export default function visualize(openCascade, shape){
     }
     
     const aLocation = new openCascade.TopLoc_Location_1();
-    const myT = openCascade.BRep_Tool.Triangulation(myFace, aLocation);
+    const myT = openCascade.BRep_Tool.Triangulation(myFace, aLocation, 0 /* == Poly_MeshPurpose_NONE */);
     if(myT.IsNull()) {
       continue;
     }
     
      
     const pc = new openCascade.Poly_Connect_2(myT);
-    const Nodes = myT.get().Nodes()
+    const triangulation = myT.get();
     
-    let vertices = new Float32Array(Nodes.Length() * 3)
+    let vertices = new Float32Array(triangulation.NbNodes() * 3)
     
     // write vertex buffer
-    for(let i = Nodes.Lower(); i <= Nodes.Upper(); i++) {
+    for(let i = 1; i <= triangulation.NbNodes(); i++) {
       const t1 = aLocation.Transformation()
-      const p = Nodes.Value(i)
+      const p = triangulation.Node(i)
       const p1 = p.Transformed(t1);
       vertices[3 * (i - 1)] = p1.X()
       vertices[3 * (i - 1) + 1] = p1.Y()
@@ -43,7 +43,7 @@ export default function visualize(openCascade, shape){
     //
 
     
-    const myNormal = new openCascade.TColgp_Array1OfDir_2(Nodes.Lower(), Nodes.Upper());
+    const myNormal = new openCascade.TColgp_Array1OfDir_2(1, triangulation.NbNodes());
     openCascade.StdPrs_ToolTriangulatedShape.Normal(myFace, pc, myNormal);
 
     let normals = new Float32Array(myNormal.Length() * 3)
@@ -113,7 +113,6 @@ export default function visualize(openCascade, shape){
     geometries.push(geometry) 
     
 
-    Nodes.delete()
     pc.delete()
     aLocation.delete()
     myT.delete()

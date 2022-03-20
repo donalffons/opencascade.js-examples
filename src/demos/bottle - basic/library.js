@@ -158,7 +158,7 @@ const makeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   const MKCylinder = new openCascade.BRepPrimAPI_MakeCylinder_3(neckAx2, myNeckRadius, myNeckHeight);
   const myNeck = MKCylinder.Shape();
   
-  myBody = new openCascade.BRepAlgoAPI_Fuse_3(myBody, myNeck);
+  myBody = new openCascade.BRepAlgoAPI_Fuse_3(myBody, myNeck, new openCascade.Message_ProgressRange_1());
 
   // Body : Create a Hollowed Solid
   let faceToRemove;
@@ -182,8 +182,8 @@ const makeBottle = (openCascade, myWidth, myHeight, myThickness) => {
   const facesToRemove = new openCascade.TopTools_ListOfShape_1();
   facesToRemove.Append_1(faceToRemove);
   const s = myBody.Shape();
-  myBody = new openCascade.BRepOffsetAPI_MakeThickSolid_1();
-  myBody.MakeThickSolidByJoin(s, facesToRemove, -myThickness / 50, 1.e-3, openCascade.BRepOffset_Mode.BRepOffset_Skin, false, false, openCascade.GeomAbs_JoinType.GeomAbs_Arc, false);
+  myBody = new openCascade.BRepOffsetAPI_MakeThickSolid();
+  myBody.MakeThickSolidByJoin(s, facesToRemove, -myThickness / 50, 1.e-3, openCascade.BRepOffset_Mode.BRepOffset_Skin, false, false, openCascade.GeomAbs_JoinType.GeomAbs_Arc, false, new openCascade.Message_ProgressRange_1());
   // Threading : Create Surfaces
   const aCyl1 = new openCascade.Geom_CylindricalSurface_1(new openCascade.gp_Ax3_2(neckAx2), myNeckRadius * 0.99);
   const aCyl2 = new openCascade.Geom_CylindricalSurface_1(new openCascade.gp_Ax3_2(neckAx2), myNeckRadius * 1.05);

@@ -14,7 +14,7 @@ const openCascadeHelper = {
     for(ExpFace.Init(shape, this.openCascade.TopAbs_ShapeEnum.TopAbs_FACE, this.openCascade.TopAbs_ShapeEnum.TopAbs_SHAPE); ExpFace.More(); ExpFace.Next()) {
       const myFace = this.openCascade.TopoDS.Face_1(ExpFace.Current());
       const aLocation = new this.openCascade.TopLoc_Location_1();
-      const myT = this.openCascade.BRep_Tool.Triangulation(myFace, aLocation);
+      const myT = this.openCascade.BRep_Tool.Triangulation(myFace, aLocation, 0 /* == Poly_MeshPurpose_NONE */);
       if(myT.IsNull()) {
         continue;
       }
@@ -27,19 +27,19 @@ const openCascadeHelper = {
       };
 
       const pc = new this.openCascade.Poly_Connect_2(myT);
-      const Nodes = myT.get().Nodes();
+      const triangulation = myT.get();
 
       // write vertex buffer
-      this_face.vertex_coord = new Array(Nodes.Length() * 3);
-      for(let i = Nodes.Lower(); i <= Nodes.Upper(); i++) {
-        const p = Nodes.Value(i).Transformed(aLocation.Transformation());
+      this_face.vertex_coord = new Array(triangulation.NbNodes() * 3);
+      for(let i = 1; i <= triangulation.NbNodes(); i++) {
+        const p = triangulation.Node(i).Transformed(aLocation.Transformation());
         this_face.vertex_coord[((i - 1) * 3)+ 0] = p.X();
         this_face.vertex_coord[((i - 1) * 3)+ 1] = p.Y();
         this_face.vertex_coord[((i - 1) * 3)+ 2] = p.Z();
       }
 
       // write normal buffer
-      const myNormal = new this.openCascade.TColgp_Array1OfDir_2(Nodes.Lower(), Nodes.Upper());
+      const myNormal = new this.openCascade.TColgp_Array1OfDir_2(1, triangulation.NbNodes());
       this.openCascade.StdPrs_ToolTriangulatedShape.Normal(myFace, pc, myNormal);
       this_face.normal_coord = new Array(myNormal.Length() * 3);
       for(let i = myNormal.Lower(); i <= myNormal.Upper(); i++) {
@@ -52,7 +52,7 @@ const openCascadeHelper = {
       // set uvcoords buffers to NULL
       // necessary for JoinPrimitive to be performed
       // this_face.tex_coord = null;
-      
+
       // write triangle buffer
       const orient = myFace.Orientation_1();
       const triangles = myT.get().Triangles();
