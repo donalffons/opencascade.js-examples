@@ -18,7 +18,6 @@
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "rm dist -fr && webpack --mode=production",
-    "predeploy": "yarn run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
