@@ -1,3 +1,5 @@
+**HEADS UP:** OpenCascade.js now finally has a proper [homepage](https://ocjs.org/). All examples will be migrated there and this repository will be archived soon.
+
 <p align="center">
   <img src="https://github.com/donalffons/opencascade.js/raw/master/images/logo.svg" alt="Logo" width="50%">
 
